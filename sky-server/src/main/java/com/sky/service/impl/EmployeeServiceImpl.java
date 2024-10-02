@@ -1,8 +1,10 @@
 package com.sky.service.impl;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
@@ -86,9 +88,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
         // 设置当前记录的创建人id和修改人id
-        // TODO：创建人id不写死
-        employee.setCreateUser(10L);  // long型
-        employee.setUpdateUser(10L);
+        // TODO：创建人为当前登录用户
+        employee.setCreateUser(BaseContext.getCurrentId());  // long型
+        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
     }
