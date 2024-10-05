@@ -40,4 +40,10 @@ public interface EmployeeMapper {
 //    public List<Employee> page(int page, int pagesize);
 
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+
+    /**
+     * 根据逐渐动态修改属性
+     * @param employee
+     */
+    void update(Employee employee);
 }
