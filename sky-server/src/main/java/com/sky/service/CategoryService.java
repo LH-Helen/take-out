@@ -11,4 +11,12 @@ public interface CategoryService {
      * @param categoryDTO
      */
     void save(CategoryDTO categoryDTO);
+
+    /**
+     * 分类分页查询
+     *
+     * @param categoryPageQueryDTO
+     * @return
+     */
+    PageResult pageQuery(CategoryPageQueryDTO categoryPageQueryDTO);
 }

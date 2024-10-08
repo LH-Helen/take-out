@@ -118,6 +118,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        PageResult pageResult = new PageResult(count, empList);
 //        return pageResult;
 //    }
+
+    /**
+     * 员工分页查询
+     *
+     * @param employeePageQueryDTO
+     * @return
+     */
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
         PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());

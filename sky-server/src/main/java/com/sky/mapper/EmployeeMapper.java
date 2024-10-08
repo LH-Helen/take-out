@@ -39,16 +39,24 @@ public interface EmployeeMapper {
 //    @Select("select * from employee limit #{page},#{pagesize}")
 //    public List<Employee> page(int page, int pagesize);
 
+    /**
+     * 员工分页查询
+     *
+     * @param employeePageQueryDTO
+     * @return
+     */
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 
     /**
      * 根据逐渐动态修改属性
+     *
      * @param employee
      */
     void update(Employee employee);
 
     /**
      * 根据id查询员工信息
+     *
      * @param id
      * @return
      */
