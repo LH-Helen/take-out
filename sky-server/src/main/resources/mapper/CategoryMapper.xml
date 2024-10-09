@@ -13,7 +13,7 @@
                 and type = #{type}
             </if>
         </where>
-        order by create_time desc
+        order by sort
     </select>
 
     <update id="update" parameterType="Category">

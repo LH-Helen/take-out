@@ -10,6 +10,6 @@ public interface SetmealMapper {
      * @param id
      * @return
      */
-    @Select("select count(*) from setmeal where category_id = #{id}")
+    @Select("select count(id) from setmeal where category_id = #{id}")
     Integer countByCategoryId(Long id);
 }
