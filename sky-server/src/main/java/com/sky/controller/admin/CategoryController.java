@@ -50,4 +50,18 @@ public class CategoryController {
         PageResult pageResult = categoryService.pageQuery(categoryPageQueryDTO);
         return Result.success(pageResult);
     }
+
+    /**
+     * 根据id删除分类
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping
+    @ApiOperation("根据id删除分类")
+    public Result deleteById(Long id) {
+        log.info("根据id删除分类：{}", id);
+        categoryService.deleteById(id);
+        return Result.success();
+    }
 }
