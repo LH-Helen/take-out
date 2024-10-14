@@ -33,6 +33,7 @@ public interface SetmealService {
 
     /**
      * 根据id查询套餐
+     *
      * @param id
      * @return
      */
@@ -40,7 +41,16 @@ public interface SetmealService {
 
     /**
      * 根据id修改套餐和包含菜品
+     *
      * @param setmealDTO
      */
     void updateWithDish(SetmealDTO setmealDTO);
+
+    /**
+     * 套餐启售、停售
+     *
+     * @param status
+     * @param id
+     */
+    void startOrStop(Integer status, Long id);
 }

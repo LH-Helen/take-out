@@ -70,12 +70,13 @@ public class SetmealController {
 
     /**
      * 根据id查询套餐
+     *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
     @ApiOperation("根据id查询套餐")
-    public Result<SetmealVO> getById(@PathVariable Long id){
+    public Result<SetmealVO> getById(@PathVariable Long id) {
         log.info("根据id查询套餐, {}", id);
         SetmealVO setmealVO = setmealService.getByIdWithDish(id);
         return Result.success(setmealVO);
@@ -83,14 +84,30 @@ public class SetmealController {
 
     /**
      * 修改套餐
+     *
      * @param setmealDTO
      * @return
      */
     @PutMapping
     @ApiOperation("修改套餐")
-    public Result update(@RequestBody SetmealDTO setmealDTO){
+    public Result update(@RequestBody SetmealDTO setmealDTO) {
         log.info("修改套餐, {}", setmealDTO);
         setmealService.updateWithDish(setmealDTO);
+        return Result.success();
+    }
+
+    /**
+     * 套餐启售、停售
+     *
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation("套餐启售、停售")
+    public Result startOrStop(@PathVariable Integer status, Long id) {
+        log.info("套餐启售、停售, {}", status);
+        setmealService.startOrStop(status, id);
         return Result.success();
     }
 }
