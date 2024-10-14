@@ -9,7 +9,7 @@
             <if test="name != null and name != ''">
                 and name like concat('%', #{name}, '%')
             </if>
-            <if test="type != null and type != ''">
+            <if test="type != null">
                 and type = #{type}
             </if>
         </where>
