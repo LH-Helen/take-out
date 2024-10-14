@@ -133,7 +133,7 @@ public class DishServiceImpl implements DishService {
     }
 
     /**
-     * 根据id需改菜品和对应的口味数据
+     * 根据id修改菜品和对应的口味数据
      * @param dishDTO
      */
     @Override
