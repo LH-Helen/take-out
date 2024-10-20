@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 套餐管理
  */
-@RestController
+@RestController("adminSetmealController")
 @RequestMapping("/admin/setmeal")
 @Slf4j
 @Api("套餐相关接口")

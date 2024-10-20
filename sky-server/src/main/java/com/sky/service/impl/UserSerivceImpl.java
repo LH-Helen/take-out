@@ -4,15 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sky.constant.MessageConstant;
 import com.sky.dto.UserLoginDTO;
+import com.sky.entity.Category;
 import com.sky.entity.User;
 import com.sky.exception.LoginFailedException;
 import com.sky.mapper.UserMapper;
 import com.sky.properties.WeChatProperties;
+import com.sky.result.Result;
 import com.sky.service.UserService;
 import com.sky.utils.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -30,6 +33,27 @@ public class UserSerivceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    /**
+     * 调用微信接口服务，获得当前用微信用户的openID
+     *
+     * @param code
+     * @return
+     */
+    private String getOpenid(String code) {
+        Map<String, String> map = new HashMap<>();
+        map.put("appid", weChatProperties.getAppid());
+        map.put("secret", weChatProperties.getSecret());
+        map.put("js_code", code);
+        map.put("grant_type", GRANT_TYPE);
+
+        String json = HttpClientUtil.doGet(WX_LOGIN, map);
+        JSONObject jsonObject = JSON.parseObject(json);
+        String openid = jsonObject.getString("openid");
+
+        return openid;
+    }
+
 
     /**
      * 微信登录
@@ -62,23 +86,5 @@ public class UserSerivceImpl implements UserService {
         return user;
     }
 
-    /**
-     * 调用微信接口服务，获得当前用微信用户的openID
-     *
-     * @param code
-     * @return
-     */
-    private String getOpenid(String code) {
-        Map<String, String> map = new HashMap<>();
-        map.put("appid", weChatProperties.getAppid());
-        map.put("secret", weChatProperties.getSecret());
-        map.put("js_code", code);
-        map.put("grant_type", GRANT_TYPE);
 
-        String json = HttpClientUtil.doGet(WX_LOGIN, map);
-        JSONObject jsonObject = JSON.parseObject(json);
-        String openid = jsonObject.getString("openid");
-
-        return openid;
-    }
 }
