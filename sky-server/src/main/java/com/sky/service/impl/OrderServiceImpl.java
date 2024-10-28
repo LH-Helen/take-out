@@ -113,10 +113,15 @@ public class OrderServiceImpl implements OrderService {
      * @param ordersPaymentDTO
      * @return
      */
-    public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
+    public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO){
+        // 判断是否是待支付状态
+        Orders orders = orderMapper.getByNumber(ordersPaymentDTO.getOrderNumber());
+        if(orders.getStatus() != Orders.PENDING_PAYMENT){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
         // 当前登录用户id
         Long userId = BaseContext.getCurrentId();
-        User user = userMapper.getById(userId);
+//        User user = userMapper.getById(userId);
 
         //调用微信支付接口，生成预支付交易单
 //        JSONObject jsonObject = weChatPayUtil.pay(
@@ -139,7 +144,6 @@ public class OrderServiceImpl implements OrderService {
         Integer OrderPaidStatus = Orders.PAID;//支付状态，已支付
         Integer OrderStatus = Orders.TO_BE_CONFIRMED;  //订单状态，待接单
         LocalDateTime check_out_time = LocalDateTime.now();//更新支付时间
-        Orders orders = orderMapper.getByNumber(ordersPaymentDTO.getOrderNumber());
         orderMapper.updateStatus(OrderStatus, OrderPaidStatus, check_out_time, orders.getId());
         return vo;
     }
