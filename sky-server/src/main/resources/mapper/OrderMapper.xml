@@ -43,6 +43,7 @@
         </set>
         where id = #{id}
     </update>
+
     <select id="pageQuery" resultType="com.sky.entity.Orders">
         select *
         from orders
@@ -68,4 +69,12 @@
         </where>
         order by order_time desc
     </select>
+    <select id="getTurnoutBydataList" resultType="com.sky.dto.TurnoutDateDTO">
+        SELECT DATE(order_time) AS order_date, SUM(amount) AS total_amount
+        FROM orders
+        WHERE status = 5
+          AND DATE(order_time) BETWEEN #{begin} AND #{end}
+        GROUP BY DATE(order_time);
+    </select>
+
 </mapper>
