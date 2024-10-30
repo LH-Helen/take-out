@@ -29,14 +29,18 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public TurnoverReportVO getTurnoverStatistics(LocalDate begin, LocalDate end) {
         List<TurnoutDateDTO> turnoutDataList = orderMapper.getTurnoutBydataList(begin, end);
+        Map<LocalDate, Double> turnoutDataMap = turnoutDataList.stream().collect(Collectors.toMap(
+                TurnoutDateDTO::getOrderDate,
+                TurnoutDateDTO::getTotalAmount
+        ));
 
-        List<LocalDate> dateList = turnoutDataList.stream()
-                .map(TurnoutDateDTO::getOrderDate)
-                .collect(Collectors.toList());
-
-        List<Double> turnoutList = turnoutDataList.stream()
-                .map(TurnoutDateDTO::getTotalAmount)
-                .collect(Collectors.toList());
+        List<LocalDate> dateList = new ArrayList<>();
+        List<Double> turnoutList = new ArrayList<>();
+        while(!begin.equals(end.plusDays(1))){
+            dateList.add(begin);
+            turnoutList.add(turnoutDataMap.getOrDefault(begin, 0.0));
+            begin = begin.plusDays(1);
+        }
 
         return TurnoverReportVO.builder()
                 .dateList(StringUtils.join(dateList, ","))
