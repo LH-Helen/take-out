@@ -69,12 +69,20 @@
         </where>
         order by order_time desc
     </select>
+
     <select id="getTurnoutBydataList" resultType="com.sky.dto.TurnoutDateDTO">
         SELECT DATE(order_time) AS order_date, SUM(amount) AS total_amount
         FROM orders
         WHERE status = 5
           AND DATE(order_time) BETWEEN #{begin} AND #{end}
         GROUP BY DATE(order_time);
+    </select>
+
+    <select id="getNewUserBydataList" resultType="com.sky.dto.UserDateDTO">
+        SELECT DATE(create_time) AS create_date, COUNT(id) AS new_user
+        FROM user
+        WHERE DATE(create_time) BETWEEN #{begin} AND #{end}
+        GROUP BY DATE(create_time);
     </select>
 
 </mapper>
