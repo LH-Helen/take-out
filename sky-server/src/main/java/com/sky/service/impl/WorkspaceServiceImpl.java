@@ -57,22 +57,22 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         //查询总订单数
         Integer totalOrderCount = 0;
         List<OrderCountDateDTO> orderCountDateDTOList = orderMapper.getOrderBydataList(begin, end, null);
-        if (orderCountDateDTOList != null && !orderCountDateDTOList.isEmpty()) {
-            totalOrderCount = orderCountDateDTOList.get(0).getOrderCount();
+        for (OrderCountDateDTO orderCountDateDTO : orderCountDateDTOList) {
+            totalOrderCount += orderCountDateDTO.getOrderCount();
         }
 
         //营业额
         Double turnover = 0.0;
         List<TurnoutDateDTO> turnoutDateDTOList = orderMapper.getTurnoutBydataList(begin, end);
-        if (turnoutDateDTOList != null && !turnoutDateDTOList.isEmpty()) {
-            turnover = turnoutDateDTOList.get(0).getTotalAmount();
+        for (TurnoutDateDTO turnoutDateDTO : turnoutDateDTOList) {
+            turnover += turnoutDateDTO.getTotalAmount();
         }
 
         //有效订单数
         Integer validOrderCount = 0;
         List<OrderCountDateDTO> validOrderCountDateDTOList = orderMapper.getOrderBydataList(begin, end, Orders.COMPLETED);
-        if (validOrderCountDateDTOList != null && !validOrderCountDateDTOList.isEmpty()) {
-            validOrderCount = validOrderCountDateDTOList.get(0).getOrderCount();
+        for (OrderCountDateDTO validOrderCountDateDTO : validOrderCountDateDTOList) {
+            validOrderCount += validOrderCountDateDTO.getOrderCount();
         }
 
         Double unitPrice = 0.0;
@@ -88,8 +88,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         //新增用户数
         Integer newUsers = 0;
         List<UserDateDTO> userDateDTOList = userMapper.getNewUserBydataList(begin, end);
-        if (userDateDTOList != null && !userDateDTOList.isEmpty()) {
-            newUsers = userDateDTOList.get(0).getNewUser();
+        for (UserDateDTO userDateDTO : userDateDTOList) {
+            newUsers += userDateDTO.getNewUser();
         }
 
         return BusinessDataVO.builder()
