@@ -78,11 +78,18 @@
         GROUP BY DATE(order_time);
     </select>
 
-    <select id="getNewUserBydataList" resultType="com.sky.dto.UserDateDTO">
-        SELECT DATE(create_time) AS create_date, COUNT(id) AS new_user
-        FROM user
-        WHERE DATE(create_time) BETWEEN #{begin} AND #{end}
-        GROUP BY DATE(create_time);
+    <select id="getOrderBydataList" resultType="com.sky.dto.OrderCountDateDTO">
+        SELECT DATE(order_time) AS order_date, COUNT(id) AS order_count
+        FROM orders
+        WHERE DATE(order_time) BETWEEN #{begin} AND #{end}
+        GROUP BY DATE(order_time);
+    </select>
+    <select id="getvalidOrderBydataList" resultType="com.sky.dto.ValidOrderCountDateDTO">
+        SELECT DATE(order_time) AS order_date, COUNT(id) AS valid_count
+        FROM orders
+        WHERE status = 5
+          AND DATE(order_time) BETWEEN #{begin} AND #{end}
+        GROUP BY DATE(order_time);
     </select>
 
 </mapper>

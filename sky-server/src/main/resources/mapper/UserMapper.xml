@@ -7,4 +7,11 @@
         insert into user (openid, name, phone, sex, id_number, avatar, create_time)
         values  (#{openid}, #{name}, #{phone}, #{sex}, #{idNumber}, #{avatar}, #{createTime})
     </insert>
+
+    <select id="getNewUserBydataList" resultType="com.sky.dto.UserDateDTO">
+        SELECT DATE(create_time) AS create_date, COUNT(id) AS new_user
+        FROM user
+        WHERE DATE(create_time) BETWEEN #{begin} AND #{end}
+        GROUP BY DATE(create_time);
+    </select>
 </mapper>

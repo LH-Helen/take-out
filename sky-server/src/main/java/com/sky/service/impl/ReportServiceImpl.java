@@ -1,9 +1,13 @@
 package com.sky.service.impl;
 
+import com.sky.dto.OrderCountDateDTO;
 import com.sky.dto.TurnoutDateDTO;
 import com.sky.dto.UserDateDTO;
+import com.sky.dto.ValidOrderCountDateDTO;
 import com.sky.mapper.OrderMapper;
+import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
+import com.sky.vo.OrderReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +25,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 统计指定时间区间内的营业额数据
@@ -58,13 +65,13 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public UserReportVO getUserReportVO(LocalDate begin, LocalDate end) {
-        List<UserDateDTO> turnoutDataList = orderMapper.getNewUserBydataList(begin, end);
+        List<UserDateDTO> turnoutDataList = userMapper.getNewUserBydataList(begin, end);
         Map<LocalDate, Integer> newUserDataMap = turnoutDataList.stream().collect(Collectors.toMap(
                 UserDateDTO::getCreateDate,
                 UserDateDTO::getNewUser
         ));
 
-        Integer totalBegin = orderMapper.getTotalByBeginDate(begin);
+        Integer totalBegin = userMapper.getTotalByBeginDate(begin);
         List<LocalDate> dateList = new ArrayList<>();
         List<Integer> totalUserList = new ArrayList<>();
         List<Integer> newUserList = new ArrayList<>();
@@ -81,6 +88,50 @@ public class ReportServiceImpl implements ReportService {
                 .dateList(StringUtils.join(dateList, ","))
                 .totalUserList(StringUtils.join(totalUserList, ","))
                 .newUserList(StringUtils.join(newUserList, ","))
+                .build();
+    }
+
+    /**
+     * 订单统计
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Override
+    public OrderReportVO getOrderReportVO(LocalDate begin, LocalDate end) {
+        List<OrderCountDateDTO> orderDateDTOList = orderMapper.getOrderBydataList(begin, end);
+        Map<LocalDate, Integer> orderDataMap = orderDateDTOList.stream().collect(Collectors.toMap(
+                OrderCountDateDTO::getOrderDate,
+                OrderCountDateDTO::getOrderCount
+        ));
+
+        List<ValidOrderCountDateDTO> validOrderDateDTOList = orderMapper.getvalidOrderBydataList(begin, end);
+        Map<LocalDate, Integer> validOrderDataMap = validOrderDateDTOList.stream().collect(Collectors.toMap(
+                ValidOrderCountDateDTO::getOrderDate,
+                ValidOrderCountDateDTO::getValidCount
+        ));
+
+        List<LocalDate> dateList = new ArrayList<>();
+        List<Integer> orderCountList = new ArrayList<>();
+        List<Integer> validOrderCountList = new ArrayList<>();
+        while(!begin.equals(end.plusDays(1))){
+            dateList.add(begin);
+            orderCountList.add(orderDataMap.getOrDefault(begin, 0));
+            validOrderCountList.add(validOrderDataMap.getOrDefault(begin, 0));
+            begin = begin.plusDays(1);
+        }
+
+
+        int totalOrderCount = orderCountList.stream().reduce(Integer::sum).orElse(0);
+        int validOrderCount = validOrderCountList.stream().reduce(Integer::sum).orElse(0);
+
+        return OrderReportVO.builder()
+                .dateList(StringUtils.join(dateList, ","))
+                .orderCountList(StringUtils.join(orderCountList, ","))
+                .validOrderCountList(StringUtils.join(validOrderCountList, ","))
+                .totalOrderCount(totalOrderCount)
+                .validOrderCount(validOrderCount)
+                .orderCompletionRate((double) validOrderCount /totalOrderCount)
                 .build();
     }
 }

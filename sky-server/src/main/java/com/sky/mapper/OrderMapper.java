@@ -1,9 +1,7 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.TurnoutDateDTO;
-import com.sky.dto.UserDateDTO;
+import com.sky.dto.*;
 import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -80,18 +78,18 @@ public interface OrderMapper {
     List<TurnoutDateDTO> getTurnoutBydataList(LocalDate begin, LocalDate end);
 
     /**
-     * 根据时间list求用户list
+     * 获得begin到end的订单总数
      * @param begin
      * @param end
      * @return
      */
-    List<UserDateDTO> getNewUserBydataList(LocalDate begin, LocalDate end);
+    List<OrderCountDateDTO> getOrderBydataList(LocalDate begin, LocalDate end);
 
     /**
-     * 获得begin之前的user总人数
+     * 获得begin到end的有效订单总数
      * @param begin
+     * @param end
      * @return
      */
-    @Select("select count(id) from user where DATE(create_time) < #{begin}")
-    Integer getTotalByBeginDate(LocalDate begin);
+    List<ValidOrderCountDateDTO> getvalidOrderBydataList(LocalDate begin, LocalDate end);
 }
