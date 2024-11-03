@@ -1,6 +1,7 @@
 package com.sky.service.impl;
 
 import com.sky.dto.*;
+import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
@@ -97,16 +98,16 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public OrderReportVO getOrderStatistics(LocalDate begin, LocalDate end) {
-        List<OrderCountDateDTO> orderDateDTOList = orderMapper.getOrderBydataList(begin, end);
+        List<OrderCountDateDTO> orderDateDTOList = orderMapper.getOrderBydataList(begin, end, null);
         Map<LocalDate, Integer> orderDataMap = orderDateDTOList.stream().collect(Collectors.toMap(
                 OrderCountDateDTO::getOrderDate,
                 OrderCountDateDTO::getOrderCount
         ));
 
-        List<ValidOrderCountDateDTO> validOrderDateDTOList = orderMapper.getvalidOrderBydataList(begin, end);
+        List<OrderCountDateDTO> validOrderDateDTOList = orderMapper.getOrderBydataList(begin, end, Orders.COMPLETED);
         Map<LocalDate, Integer> validOrderDataMap = validOrderDateDTOList.stream().collect(Collectors.toMap(
-                ValidOrderCountDateDTO::getOrderDate,
-                ValidOrderCountDateDTO::getValidCount
+                OrderCountDateDTO::getOrderDate,
+                OrderCountDateDTO::getOrderCount
         ));
 
         List<LocalDate> dateList = new ArrayList<>();

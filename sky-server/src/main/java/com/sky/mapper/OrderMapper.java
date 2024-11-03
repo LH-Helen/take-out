@@ -83,15 +83,7 @@ public interface OrderMapper {
      * @param end
      * @return
      */
-    List<OrderCountDateDTO> getOrderBydataList(LocalDate begin, LocalDate end);
-
-    /**
-     * 获得begin到end的有效订单总数
-     * @param begin
-     * @param end
-     * @return
-     */
-    List<ValidOrderCountDateDTO> getvalidOrderBydataList(LocalDate begin, LocalDate end);
+    List<OrderCountDateDTO> getOrderBydataList(LocalDate begin, LocalDate end, Integer status);
 
     /**
      * 指定时间范围内的销量排名top10

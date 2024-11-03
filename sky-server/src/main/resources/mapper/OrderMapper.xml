@@ -87,6 +87,9 @@
         select date(order_time) as order_date, count(id) as order_count
         from orders
         <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
             <if test="begin != null">
                 and date(order_time) &gt;= #{begin}
             </if>
@@ -94,20 +97,6 @@
                 and date(order_time) &lt;= #{end}
             </if>
         </where>
-        group by date(order_time);
-
-    </select>
-
-    <select id="getvalidOrderBydataList" resultType="com.sky.dto.ValidOrderCountDateDTO">
-        select date(order_time) as order_date, count(id) as valid_count
-        from orders
-        where status = 5
-            <if test="begin != null">
-                and date(order_time) &gt;= #{begin}
-            </if>
-            <if test="end != null">
-                and date(order_time) &lt;= #{end}
-            </if>
         group by date(order_time);
 
     </select>
