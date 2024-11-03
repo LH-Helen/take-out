@@ -1,13 +1,11 @@
 package com.sky.service.impl;
 
-import com.sky.dto.OrderCountDateDTO;
-import com.sky.dto.TurnoutDateDTO;
-import com.sky.dto.UserDateDTO;
-import com.sky.dto.ValidOrderCountDateDTO;
+import com.sky.dto.*;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import org.apache.commons.lang3.StringUtils;
@@ -64,7 +62,7 @@ public class ReportServiceImpl implements ReportService {
      * @return
      */
     @Override
-    public UserReportVO getUserReportVO(LocalDate begin, LocalDate end) {
+    public UserReportVO getUserStatistics(LocalDate begin, LocalDate end) {
         List<UserDateDTO> turnoutDataList = userMapper.getNewUserBydataList(begin, end);
         Map<LocalDate, Integer> newUserDataMap = turnoutDataList.stream().collect(Collectors.toMap(
                 UserDateDTO::getCreateDate,
@@ -98,7 +96,7 @@ public class ReportServiceImpl implements ReportService {
      * @return
      */
     @Override
-    public OrderReportVO getOrderReportVO(LocalDate begin, LocalDate end) {
+    public OrderReportVO getOrderStatistics(LocalDate begin, LocalDate end) {
         List<OrderCountDateDTO> orderDateDTOList = orderMapper.getOrderBydataList(begin, end);
         Map<LocalDate, Integer> orderDataMap = orderDateDTOList.stream().collect(Collectors.toMap(
                 OrderCountDateDTO::getOrderDate,
@@ -132,6 +130,23 @@ public class ReportServiceImpl implements ReportService {
                 .totalOrderCount(totalOrderCount)
                 .validOrderCount(validOrderCount)
                 .orderCompletionRate((double) validOrderCount /totalOrderCount)
+                .build();
+    }
+
+    /**
+     * 指定时间范围内的销量排名top10
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Override
+    public SalesTop10ReportVO getSalesTop10(LocalDate begin, LocalDate end) {
+        List<GoodsSalesDTO> goodsSalesDTOList = orderMapper.getSalesTop10(begin, end);
+        List<String> nameList = goodsSalesDTOList.stream().map(GoodsSalesDTO::getName).collect(Collectors.toList());
+        List<Integer> numberList = goodsSalesDTOList.stream().map(GoodsSalesDTO::getNumber).collect(Collectors.toList());
+        return SalesTop10ReportVO.builder()
+                .nameList(StringUtils.join(nameList, ","))
+                .numberList(StringUtils.join(numberList, ","))
                 .build();
     }
 }

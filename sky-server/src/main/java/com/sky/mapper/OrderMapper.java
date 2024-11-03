@@ -92,4 +92,12 @@ public interface OrderMapper {
      * @return
      */
     List<ValidOrderCountDateDTO> getvalidOrderBydataList(LocalDate begin, LocalDate end);
+
+    /**
+     * 指定时间范围内的销量排名top10
+     * @param begin
+     * @param end
+     * @return
+     */
+    List<GoodsSalesDTO> getSalesTop10(LocalDate begin, LocalDate end);
 }
